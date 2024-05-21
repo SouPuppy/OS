@@ -41,14 +41,31 @@ entry:
 		MOV		DH,0			; Head 		0
 		MOV		CL,2			; Sector 	2
 
-		; MOV		DH,0
-
-		MOV		AH,0x02		
-		MOV		AL,1		
+readloop:
+		MOV		SI,0
+retry:
+		MOV 	AH,0x02
+		MOV		AL,1
 		MOV		BX,0
-		MOV		DL,0x00		
-		INT		0x13		
-		JC		error
+		MOV 	DL,0x00
+		INT 	0x13
+		JNC		fin
+
+		ADD		SI,1
+		CMP		SI,5
+		JAE		error
+
+		MOV 	AH,0x00
+		MOV		DL,0x00
+		INT		0x13
+		JMP		retry
+next:
+		MOV		AX,ES
+		ADD		AX,0x0020
+		MOV		ES,AX
+		ADD		CL,1
+		CMP		CL,18
+		JBE		readloop
 
 putloop:
 		MOV		AL,[SI]
