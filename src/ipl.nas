@@ -33,9 +33,23 @@ entry:
 		MOV		SS,AX
 		MOV		SP,0x7c00
 		MOV		DS,AX
-		MOV		ES,AX
 
-		MOV		SI,msg
+
+		MOV		AX,0x0820
+		MOV		ES,AX
+		MOV		CH,0			; Cylinder 	0
+		MOV		DH,0			; Head 		0
+		MOV		CL,2			; Sector 	2
+
+		; MOV		DH,0
+
+		MOV		AH,0x02		
+		MOV		AL,1		
+		MOV		BX,0
+		MOV		DL,0x00		
+		INT		0x13		
+		JC		error
+
 putloop:
 		MOV		AL,[SI]
 		ADD		SI,1			; 给SI加1
@@ -49,9 +63,12 @@ fin:
 		HLT						; 让CPU停止，等待指令
 		JMP		fin				; 无限循环
 
+error:
+		MOV		SI,msg
+
 msg:
 		DB		0x0a, 0x0a		; 换行两次
-		DB		"he21o, world"
+		DB		"load error"
 		DB		0x0a			; 换行
 		DB		0
 
