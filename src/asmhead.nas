@@ -2,7 +2,7 @@
 ; TAB=4
 
 BOTPAK    EQU        0x00280000        ; bootpack address
-DSKCAC    EQU        0x00100000        ; disk cache address
+DSKCAC    EQU        0x00100000        ;         disk cache address
 DSKCAC0   EQU        0x00008000        ; disk cache load area
 
 ; BOOT_INFO offsets
