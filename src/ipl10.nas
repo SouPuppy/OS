@@ -1,5 +1,7 @@
-; hello-os
+; ordina-os
 ; TAB=4
+
+CYLS	EQU		10
 
 		ORG		0x7c00			; 指明程序装载地址
 
@@ -7,7 +9,7 @@
 
 		JMP		entry
 		DB		0x90
-		DB		"HELLOIPL"		; 启动扇区名称（8字节）
+		DB		"ORDINAOS"		; 启动扇区名称（8字节）
 		DW		512				; 每个扇区（sector）大小（必须512字节）
 		DB		1				; 簇（cluster）大小（必须为1个扇区）
 		DW		1				; FAT起始位置（一般为第一个扇区）
@@ -22,7 +24,7 @@
 		DD		2880			; 重写一次磁盘大小
 		DB		0,0,0x29		; 意义不明（固定）
 		DD		0xffffffff		; （可能是）卷标号码
-		DB		"HELLO-OS   "	; 磁盘的名称（必须为11字?，不足填空格）
+		DB		"ORDINAOS   "	; 磁盘的名称（必须为11字?，不足填空格）
 		DB		"FAT12   "		; 磁盘格式名称（必??8字?，不足填空格）
 		RESB	18				; 先空出18字节
 
@@ -49,8 +51,9 @@ retry:
 		MOV		BX,0
 		MOV 	DL,0x00
 		INT 	0x13
-		JNC		fin
+		JNC		next
 
+; retry for 5 times
 		ADD		SI,1
 		CMP		SI,5
 		JAE		error
@@ -59,6 +62,7 @@ retry:
 		MOV		DL,0x00
 		INT		0x13
 		JMP		retry
+
 next:
 		MOV		AX,ES
 		ADD		AX,0x0020
@@ -66,6 +70,23 @@ next:
 		ADD		CL,1
 		CMP		CL,18
 		JBE		readloop
+
+		MOV		CL,1
+		ADD		DH,1
+		CMP		DH,2
+		JB		readloop
+		
+		MOV		DH,0
+		ADD		CH,1
+		CMP		CH,CYLS
+		JB		readloop
+
+; start from haribote.sys
+		MOV		[0x0ff0],CH
+		JMP		0xc200
+
+error:
+		MOV		SI,msg
 
 putloop:
 		MOV		AL,[SI]
@@ -79,9 +100,6 @@ putloop:
 fin:
 		HLT						; 让CPU停止，等待指令
 		JMP		fin				; 无限循环
-
-error:
-		MOV		SI,msg
 
 msg:
 		DB		0x0a, 0x0a		; 换行两次
