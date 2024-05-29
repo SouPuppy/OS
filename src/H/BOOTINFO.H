@@ -3,22 +3,17 @@
 
 #include "GENERAL.H"
 
-char    *vram;
-int      xsize, ysize;
+typedef struct BOOTINFO{
+	uint8_t  cyls, leds, vmode, reserve;
+	uint16_t scrnx, scrny;
+	uint32_t *vram;
+} BOOTINFO;
 
-short   *boot_info_scrnx, *boot_info_scrny;
-int     *boot_info_vram;
+struct BOOTINFO *boot_info;
 
-void init_bootinfo(void) {
-
-    // aligned with asmhead.lst
-    boot_info_scrnx = (short *) 0x0ff4;
-    boot_info_scrny = (short *) 0x0ff6;
-    boot_info_vram  = (int *)   0x0ff8;
-
-    xsize = *boot_info_scrnx;
-	ysize = *boot_info_scrny;
-	vram  = (char *) *boot_info_vram;
+void init_bootinfo() {
+	// see in asmhead.nas
+    boot_info = (struct BOOTINFO *) 0x0ff0;
 }
 
 #endif  // BOOTINFO_H
