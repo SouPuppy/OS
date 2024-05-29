@@ -1,19 +1,22 @@
 #include "./H/GENERAL.H"
-#include "./H/COLOR.H"
+#include "./H/BOOTINFO.H"
+#include "./H/PALETTE.H"
 
 void boxfill8(unsigned char *vram, int xsize, unsigned char c, int x0, int y0, int x1, int y1);
 
+void initiate(void) {
+	init_bootinfo();
+	init_palette();
+}
+
 void HariMain(void)
 {
-	char *vram;
-	int xsize, ysize;
+	initiate();
+	// vram = (char *) 0xa0000;
+	// xsize = 320;
+	// ysize = 200;
 
-	init_palette();
-	vram = (char *) 0xa0000;
-	xsize = 320;
-	ysize = 200;
-
-	boxfill8(vram, xsize, scarlet,  0,         0,          xsize -  1, ysize - 29);
+	boxfill8(vram, xsize, iris,  0,         0,          xsize -  1, ysize - 29);
 	boxfill8(vram, xsize, white,  0,         ysize - 28, xsize -  1, ysize - 28);
 	boxfill8(vram, xsize, 2,  0,         ysize - 27, xsize -  1, ysize - 27);
 	boxfill8(vram, xsize, white,  0,         ysize - 26, xsize -  1, ysize -  1);

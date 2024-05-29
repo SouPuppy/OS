@@ -1,5 +1,5 @@
-#ifndef COLOR_H
-#define COLOR_H
+#ifndef PALETTE_H
+#define PALETTE_H
 
 #include "GENERAL.H"
 
@@ -64,4 +64,4 @@ void set_palette(int start, int end, unsigned char *rgb) {
     return ;
 }
 
-#endif  // COLOR_H
+#endif  // PALETTE_H
