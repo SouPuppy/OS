@@ -56,6 +56,7 @@ img :
 	$(MAKE) haribote.img
 
 run :
+	$(MAKE) src_only
 	$(MAKE) img
 	$(COPY) haribote.img 	$(TOOLPATH)\qemu\fdimage0.bin
 	$(MAKE)	-C 				$(TOOLPATH)\qemu
