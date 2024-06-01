@@ -20,7 +20,6 @@ DEL      = del
 
 default : 
 	$(MAKE) run
-	$(MAKE) clean
 
 ipl10.bin : ipl10.nas Makefile
 	$(NASK) ipl10.nas ipl10.bin ipl10.lst
@@ -94,7 +93,6 @@ img :
 	$(MAKE) haribote.img
 
 run :
-	$(MAKE) src_only
 	$(MAKE) img
 	$(COPY) haribote.img 	$(TOOLPATH)\qemu\fdimage0.bin
 	$(MAKE)	-C 				$(TOOLPATH)\qemu
@@ -114,6 +112,8 @@ clean :
 	-$(DEL) bootpack.bim
 	-$(DEL) bootpack.hrb
 	-$(DEL) haribote.sys
+	$(MAKE) -C LIB clean
+
 
 src_only :
 	$(MAKE) clean
