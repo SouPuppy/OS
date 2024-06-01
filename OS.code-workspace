@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../30dayMakeOS-master(CH)"
+		},
+		{
+			"path": "../30dayMakeOS-master(CH)/projects"
+		},
+		{
+			"path": "../unix-v4man"
+		},
+		{
+			"path": "../MS-DOS/v4.0"
+		}
+	],
+	"settings": {}
+}

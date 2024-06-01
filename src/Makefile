@@ -5,8 +5,13 @@ MAKE     = $(TOOLPATH)\make.exe -r
 NASK     = $(TOOLPATH)\nask.exe
 CC1      = $(TOOLPATH)\cc1.exe -I$(INCPATH) -Os -Wall -quiet
 GAS2NASK = $(TOOLPATH)\gas2nask.exe -a
+
 OBJ2BIM  = $(TOOLPATH)\obj2bim.exe
 BIM2HRB  = $(TOOLPATH)\bim2hrb.exe
+
+MAKEFONT = $(TOOLPATH)\makefont.exe
+BIN2OBJ  = $(TOOLPATH)\bin2obj.exe
+
 RULEFILE = $(TOOLPATH)\haribote\haribote.rul
 EDIMG    = $(TOOLPATH)\edimg.exe
 IMGTOL   = $(TOOLPATH)\imgtol.com
@@ -32,13 +37,46 @@ bootpack.nas : bootpack.gas Makefile
 bootpack.obj : bootpack.nas Makefile
 	$(NASK) bootpack.nas bootpack.obj bootpack.lst
 
+
+
+
+
+
+# 规则：将 LIB/IO/IO.c 编译为 IO.gas
+LIB/IO/IO.gas : LIB/IO/IO.c Makefile
+	$(CC1) -o LIB/IO/IO.gas LIB/IO/IO.c
+
+# 规则：将 LIB/IO/IO.gas 转换为 IO.nas
+LIB/IO/IO.nas : LIB/IO/IO.gas Makefile
+	$(GAS2NASK) LIB/IO/IO.gas LIB/IO/IO.nas
+
+# 规则：将 LIB/IO/IO.nas 汇编为 IO.obj 和 IO.lst
+LIB/IO/IO.obj : LIB/IO/IO.nas Makefile
+	$(NASK) LIB/IO/IO.nas LIB/IO/IO.obj LIB/IO/IO.lst
+
+
+
+
+
+LIB_OBJ := $(wildcard LIB/*.obj)
+
 naskfunc.obj : naskfunc.nas Makefile
 	$(NASK) naskfunc.nas naskfunc.obj naskfunc.lst
 
-bootpack.bim : bootpack.obj naskfunc.obj Makefile
+EZ_font.bin : FONT\EZ_font.txt Makefile
+	$(MAKEFONT) FONT\EZ_font.txt EZ_font.bin
+
+EZ_font.obj : EZ_font.bin Makefile
+	$(BIN2OBJ) EZ_font.bin EZ_font.obj _EZ_font
+
+bootpack.bim : bootpack.obj naskfunc.obj EZ_font.obj $(LIB_OBJ) Makefile
+	$(MAKE) -C lib
 	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
-		bootpack.obj naskfunc.obj
-# 3MB+64KB=3136KB
+		bootpack.obj naskfunc.obj $(LIB_OBJ) EZ_font.obj
+
+
+
+
 
 bootpack.hrb : bootpack.bim Makefile
 	$(BIM2HRB) bootpack.bim bootpack.hrb 0
