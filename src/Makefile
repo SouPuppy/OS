@@ -42,18 +42,30 @@ bootpack.obj : bootpack.nas Makefile
 
 
 # 规则：将 LIB/IO/IO.c 编译为 IO.gas
-LIB/IO/IO.gas : LIB/IO/IO.c Makefile
-	$(CC1) -o LIB/IO/IO.gas LIB/IO/IO.c
+# LIB/IO/IO.gas : LIB/IO/IO.c Makefile
+# 	$(CC1) -o LIB/IO/IO.gas LIB/IO/IO.c
 
-# 规则：将 LIB/IO/IO.gas 转换为 IO.nas
-LIB/IO/IO.nas : LIB/IO/IO.gas Makefile
-	$(GAS2NASK) LIB/IO/IO.gas LIB/IO/IO.nas
+# # 规则：将 LIB/IO/IO.gas 转换为 IO.nas
+# LIB/IO/IO.nas : LIB/IO/IO.gas Makefile
+# 	$(GAS2NASK) LIB/IO/IO.gas LIB/IO/IO.nas
 
-# 规则：将 LIB/IO/IO.nas 汇编为 IO.obj 和 IO.lst
-LIB/IO/IO.obj : LIB/IO/IO.nas Makefile
-	$(NASK) LIB/IO/IO.nas LIB/IO/IO.obj LIB/IO/IO.lst
+# # 规则：将 LIB/IO/IO.nas 汇编为 IO.obj 和 IO.lst
+# LIB/IO/IO.obj : LIB/IO/IO.nas Makefile
+# 	$(NASK) LIB/IO/IO.nas LIB/IO/IO.obj LIB/IO/IO.lst
 
+SRCS := $(wildcard *.c)
+C_SOURCE_OBJS := $(SRCS:.c=.obj)
 
+# compile_all: $(C_SOURCE_OBJS)
+
+%.gas: %.c
+	$(CC1) -o $@ $<
+
+%.nas : %.gas Makefile
+	$(GAS2NASK) $< $@
+
+%.obj : %.nas Makefile
+	$(NASK) $< $@
 
 
 
@@ -68,12 +80,14 @@ EZ_font.bin : FONT\EZ_font.txt Makefile
 EZ_font.obj : EZ_font.bin Makefile
 	$(BIN2OBJ) EZ_font.bin EZ_font.obj _EZ_font
 
-bootpack.bim : bootpack.obj naskfunc.obj EZ_font.obj $(LIB_OBJ) Makefile
-	$(MAKE) -C lib
+# bootpack.bim : $(LIB_OBJ) bootpack.obj naskfunc.obj EZ_font.obj Makefile
+# 	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
+# 		bootpack.obj naskfunc.obj $(LIB_OBJ) EZ_font.obj
+
+
+bootpack.bim : $(LIB_OBJ) $(C_SOURCE_OBJS) naskfunc.obj EZ_font.obj Makefile
 	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
-		bootpack.obj naskfunc.obj $(LIB_OBJ) EZ_font.obj
-
-
+		naskfunc.obj $(C_SOURCE_OBJS) $(LIB_OBJ) EZ_font.obj
 
 
 
@@ -93,6 +107,8 @@ img :
 	$(MAKE) haribote.img
 
 run :
+	$(MAKE) clean
+	$(MAKE) -C lib
 	$(MAKE) img
 	$(COPY) haribote.img 	$(TOOLPATH)\qemu\fdimage0.bin
 	$(MAKE)	-C 				$(TOOLPATH)\qemu

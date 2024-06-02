@@ -37,4 +37,5 @@ void print_char(unsigned char color, int x, int y, char c) {
     }
 }
 
+
 #endif  // DISPLAY_H
