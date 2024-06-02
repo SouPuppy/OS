@@ -19,13 +19,16 @@ void init_IO() {
     stderr = &_stderr;
 }
 
+int line_spacing = 2;
+int word_spacing = 1;
+
 int _write(FILE *stream, char c) {
     if (stream->_file == 1) { // stdout
         static int x = 8, y = 8;
-        print_char(rose, x, y, c);
-        x += 8;
-        if (x >= boot_info->scrnx) {
-            x = 0;
+        print_char(white, x, y, c);
+        x += 8 + word_spacing;
+        if (x >= boot_info->scrnx - 8 - word_spacing) {
+            x = 8;
             y += 16;
         }
         return 1;

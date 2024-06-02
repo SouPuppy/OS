@@ -27,22 +27,11 @@ void HariMain(void) {
 	initiate();
 	
 	box(black, 0, 0, boot_info->scrnx, boot_info->scrny);
+	_fprintf(stdout, "asdasdasd");
 
-	int a = 12345;
-	char name[10] = "XYL";
-	char c = 'S';
-	_fprintf(stdout, "%s D%cB%d", name, c, a);
+	
 
-	// print_char(white, i += 8, 8, 'Z');
-	// print_char(white, i += 8, 8, 'H');
 
-	// print_char(white, i += 8, 8, ' ');
-	
-	// print_char(white, i += 8, 8, 'D');
-	// print_char(white, i += 8, 8, 'S');
-	// print_char(white, i += 8, 8, 'B');
-	
-	
 	for (;;) {
 		io_hlt();
 	}

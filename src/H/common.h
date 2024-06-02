@@ -2,7 +2,7 @@
 #define GENERAL_H
 
 
-// ----- color define -----
+// ----- 16x colors -----
 
 #define true_Red        0
 #define scarlet         1
