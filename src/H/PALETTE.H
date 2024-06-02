@@ -1,27 +1,13 @@
 #ifndef PALETTE_H
 #define PALETTE_H
 
-#include "GENERAL.H"
-
-#define true_Red        0
-#define scarlet         1
-#define rose            2
-#define tangerine       3
-#define amber           4
-#define willow          5
-#define green           6
-#define aquamarine      7
-#define dark_Teal       8
-#define azure           9
-#define dark_Blue       10
-#define iris            11
-#define white           12
-#define skin            13
-#define withered_Tea    14
-#define black           15
+#include "common.h"
 
 void init_palette(void);
 void set_palette(int start, int end, unsigned char *rgb);
+
+
+
 
 void init_palette(void) {
     static unsigned char table_rgb[16 * 3] = {

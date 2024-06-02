@@ -1,6 +1,8 @@
 #ifndef IO_H
 #define IO_H
 
+#include "common.h"
+
 typedef struct _iobuf {
     int _file;       // file descriptor
     char *_ptr;
@@ -11,7 +13,8 @@ typedef struct _iobuf {
 
 void init_IO();
 void print_char(unsigned char color, int x, int y, char c);
-// int fprintf(FILE *stream, const char *format, ...);
 int _write(FILE *stream, char c);
+void itoa(int num, char *str);
+int _fprintf(FILE *stream, const char *format, ...);
 
 #endif // IO_H

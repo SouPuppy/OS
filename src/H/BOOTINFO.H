@@ -1,7 +1,7 @@
 #ifndef BOOTINFO_H
 #define BOOTINFO_H
 
-#include "GENERAL.H"
+#include "common.h"
 
 typedef struct BOOTINFO{
 	uint8_t  cyls, leds, vmode, reserve;
