@@ -32,4 +32,3 @@ void print_char(unsigned char color, int x, int y, char c) {
         if ((d & 0x01) != 0) p[7] = color;
     }
 }
-

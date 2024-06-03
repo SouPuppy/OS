@@ -2,3 +2,8 @@
 #include "./H/bootinfo.h"
 
 struct BOOTINFO *boot_info;
+
+void init_bootinfo() {
+	// see in asmhead.nas
+    boot_info = (struct BOOTINFO *) 0x0ff0;
+}

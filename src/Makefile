@@ -85,9 +85,9 @@ EZ_font.obj : EZ_font.bin Makefile
 # 		bootpack.obj naskfunc.obj $(LIB_OBJ) EZ_font.obj
 
 
-bootpack.bim : $(LIB_OBJ) $(C_SOURCE_OBJS) naskfunc.obj EZ_font.obj Makefile
+bootpack.bim : naskfunc.obj $(LIB_OBJ) $(C_SOURCE_OBJS) EZ_font.obj Makefile
 	$(OBJ2BIM) @$(RULEFILE) out:bootpack.bim stack:3136k map:bootpack.map \
-		naskfunc.obj $(C_SOURCE_OBJS) $(LIB_OBJ) EZ_font.obj
+		naskfunc.obj $(LIB_OBJ) $(C_SOURCE_OBJS) EZ_font.obj
 
 
 

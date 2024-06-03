@@ -7,8 +7,10 @@
 [FILE "naskfunc.nas"]
 
 		GLOBAL	_io_hlt, _io_cli, _io_sti, _io_stihlt
-		GLOBAL  _io_load_eflags, _io_store_eflags
+		GLOBAL	_io_in_BYTE, _io_in_WORD, _io_in_DWORD
 		GLOBAL	_io_out_BYTE, _io_out_WORD, _io_out_DWORD
+		GLOBAL	_load_gdtr, _load_idtr
+		GLOBAL  _io_load_eflags, _io_store_eflags
 
 ; functions
 
@@ -33,6 +35,23 @@ _io_store_eflags:				; void io_store_eflags(int eflags);
 		POPFD 		; POP EFLAGS
 		RET
 
+_io_in_BYTE:	; int io_in8(int port);
+		MOV		EDX,[ESP+4]		; port
+		MOV		EAX,0
+		IN		AL,DX
+		RET
+
+_io_in_WORD:	; int io_in16(int port);
+		MOV		EDX,[ESP+4]		; port
+		MOV		EAX,0
+		IN		AX,DX
+		RET
+
+_io_in_DWORD:	; int io_in32(int port);
+		MOV		EDX,[ESP+4]		; port
+		IN		EAX,DX
+		RET
+
 _io_out_BYTE:	; void io_out8(int port, int data);
 		MOV		EDX,[ESP+4]		; port
 		MOV		AL,[ESP+8]		; data
@@ -49,4 +68,16 @@ _io_out_DWORD:	; void io_out32(int port, int data);
 		MOV		EDX,[ESP+4]		; port
 		MOV		EAX,[ESP+8]		; data
 		OUT		DX,EAX
+		RET
+
+_load_gdtr:		; void load_gdtr(int limit, int addr);
+		MOV		AX,[ESP+4]		; limit
+		MOV		[ESP+6],AX
+		LGDT	[ESP+6]
+		RET
+
+_load_idtr:		; void load_idtr(int limit, int addr);
+		MOV		AX,[ESP+4]		; limit
+		MOV		[ESP+6],AX
+		LIDT	[ESP+6]
 		RET
