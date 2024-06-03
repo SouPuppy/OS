@@ -1,8 +1,11 @@
 #include "./H/common.h"
+
 #include "./H/bootinfo.h"
 #include "./H/palette.h"
-#include "./H/memory.h"
 #include "./H/display.h"
+
+#include "./H/dsctbl.h"
+
 #include "./H/io.h"
 
 extern FILE *stdin;
@@ -13,8 +16,9 @@ extern struct BOOTINFO *boot_info;
 void initiate(void) {
 	init_bootinfo();
 	init_palette();
-	init_gdt_idt();
 	init_io();
+	init_pic();
+	init_gdtidt();
 }
 
 void HariMain(void) {

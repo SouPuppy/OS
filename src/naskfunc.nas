@@ -9,8 +9,12 @@
 		GLOBAL	_io_hlt, _io_cli, _io_sti, _io_stihlt
 		GLOBAL	_io_in_BYTE, _io_in_WORD, _io_in_DWORD
 		GLOBAL	_io_out_BYTE, _io_out_WORD, _io_out_DWORD
+		GLOBAL	_io_load_eflags, _io_store_eflags
 		GLOBAL	_load_gdtr, _load_idtr
-		GLOBAL  _io_load_eflags, _io_store_eflags
+		
+		GLOBAL	_asm_inthandler21, _asm_inthandler27, _asm_inthandler2c
+		EXTERN	_inthandler21, _inthandler27, _inthandler2c
+
 
 ; functions
 
@@ -22,17 +26,6 @@ _io_hlt:						; void io_hlt(void);
 
 _io_cli:						; void io_hlt(void);
 		CLI
-		RET
-
-_io_load_eflags:				; int io_load_eflags(void);
-		PUSHFD		; PUSH EFLAGS
-		POP		EAX
-		RET
-
-_io_store_eflags:				; void io_store_eflags(int eflags);
-		MOV		EAX,[ESP + 4]
-		PUSH 	EAX
-		POPFD 		; POP EFLAGS
 		RET
 
 _io_in_BYTE:	; int io_in8(int port);
@@ -70,6 +63,17 @@ _io_out_DWORD:	; void io_out32(int port, int data);
 		OUT		DX,EAX
 		RET
 
+_io_load_eflags:				; int io_load_eflags(void);
+		PUSHFD		; PUSH EFLAGS
+		POP		EAX
+		RET
+
+_io_store_eflags:				; void io_store_eflags(int eflags);
+		MOV		EAX,[ESP+4]
+		PUSH 	EAX
+		POPFD 		; POP EFLAGS
+		RET
+
 _load_gdtr:		; void load_gdtr(int limit, int addr);
 		MOV		AX,[ESP+4]		; limit
 		MOV		[ESP+6],AX
@@ -81,3 +85,4 @@ _load_idtr:		; void load_idtr(int limit, int addr);
 		MOV		[ESP+6],AX
 		LIDT	[ESP+6]
 		RET
+

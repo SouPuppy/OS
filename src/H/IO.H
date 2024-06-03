@@ -11,7 +11,7 @@ typedef struct _iobuf {
 } FILE;
 
 
-void init_io();
+void init_io(void);
 void print_char(unsigned char color, int x, int y, char c);
 int _write(FILE *stream, char c);
 void itoa(int num, char *str);

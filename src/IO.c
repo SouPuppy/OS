@@ -13,7 +13,7 @@ FILE _stdin  = (FILE){ 0, NULL, 0, 0 };
 FILE _stdout = (FILE){ 1, NULL, 0, 0 };
 FILE _stderr = (FILE){ 2, NULL, 0, 0 };
 
-void init_io() {
+void init_io(void) {
     stdin  = &_stdin;
     stdout = &_stdout;
     stderr = &_stderr;

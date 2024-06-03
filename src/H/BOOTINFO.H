@@ -9,6 +9,6 @@ typedef struct BOOTINFO{
 	uint32_t *vram;
 };
 
-void init_bootinfo();
+void init_bootinfo(void);
 
 #endif  // BOOTINFO_H
