@@ -10,6 +10,9 @@ typedef struct _iobuf {
     int _buff_size;
 } FILE;
 
+extern FILE *stdin;
+extern FILE *stdout;
+extern FILE *stderr;
 
 void init_io(void);
 void print_char(unsigned char color, int x, int y, char c);

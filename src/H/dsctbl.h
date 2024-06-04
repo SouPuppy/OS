@@ -1,5 +1,5 @@
-#ifndef DSCTNL_H
-#define DSCTNL_H
+#ifndef DSCTBL_H
+#define DSCTBL_H
 
 #include "common.h"
 
@@ -17,16 +17,17 @@ typedef struct SEGMENT_DESCRIPTOR {
 	short 	limit_low	, base_low;
 	char 	base_mid	, access_right;
 	char 	limit_high	, base_high;
-};
+} __attribute__((packed));
 
 typedef struct GATE_DESCRIPTOR {
 	short 	offset_low	, selector;
 	char 	dw_count	, access_right;
 	short 	offset_high;
-};
+} __attribute__((packed));
 
 void init_gdtidt(void);
 void set_segmdesc(struct SEGMENT_DESCRIPTOR *segm_d, unsigned int limit, int base, int ar);
 void set_gatedesc(struct GATE_DESCRIPTOR *gate_d, int offset, int selector, int ar);
 
-#endif  // DSCTNL_H
+
+#endif  // DSCTBL_H

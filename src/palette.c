@@ -31,11 +31,11 @@ void set_palette(int start, int end, unsigned char *rgb) {
     
     // 0x03c8: VGA head
     // 0x03c9: VGA component
-	io_out_BYTE(0x03c8, start);
+	io_out8(0x03c8, start);
 	for (i = start; i <= end; i++) {
-		io_out_BYTE(0x03c9, rgb[0] / 4);
-		io_out_BYTE(0x03c9, rgb[1] / 4);
-		io_out_BYTE(0x03c9, rgb[2] / 4);
+		io_out8(0x03c9, rgb[0] / 4);
+		io_out8(0x03c9, rgb[1] / 4);
+		io_out8(0x03c9, rgb[2] / 4);
 		rgb += 3;
 	}
     io_store_eflags(eflags);  // Restore interrupt flag

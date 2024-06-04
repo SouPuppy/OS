@@ -20,6 +20,7 @@ DEL      = del
 
 default : 
 	$(MAKE) run
+	$(MAKE) clean
 
 ipl10.bin : ipl10.nas Makefile
 	$(NASK) ipl10.nas ipl10.bin ipl10.lst

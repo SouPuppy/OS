@@ -16,9 +16,16 @@
 #define PIC1_ICW3		0x00a1
 #define PIC1_ICW4		0x00a1
 
+typedef struct KEYBUF {
+	unsigned char data, flag;
+};
+
+extern struct KEYBUF keybuf;
+
 void init_pic(void);
-void asm_inthandler21(void);
-void asm_inthandler27(void);
-void asm_inthandler2c(void);
+
+void inthandler21(int *esp);
+void inthandler27(int *esp);
+void inthandler2c(int *esp);
 
 #endif  // PIC_H
