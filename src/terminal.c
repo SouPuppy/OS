@@ -33,13 +33,43 @@ void init_terminal(struct TERMINAL *terminal,
 	terminal->crusor_y = 0;
 }
 
+#define TAB_LENGTH 4
+
 void print(struct TERMINAL *terminal, char c) {
-	print_char(terminal->font_color, terminal->crusor_x * (FONT_WEIGHT + terminal->skip_line), terminal->crusor_y * (FONT_HEIGHT + terminal->skip_word), c);
-	crusor_next(terminal);
+	switch (c) {
+		case '\n':
+			newline(terminal);
+			break;
+		case '\t':
+            do {
+                print_char(terminal->font_color,
+                           terminal->crusor_x * (FONT_WEIGHT + terminal->skip_line),
+                           terminal->crusor_y * (FONT_HEIGHT + terminal->skip_word),
+                           ' ');
+                crusor_next(terminal);
+            } while (terminal->crusor_x % TAB_LENGTH != 0);
+			break;
+		default:
+            print_char(terminal->font_color,
+                       terminal->crusor_x * (FONT_WEIGHT + terminal->skip_line),
+                       terminal->crusor_y * (FONT_HEIGHT + terminal->skip_word),
+                       c);
+            crusor_next(terminal);
+			break;
+	}
 }
 
 void clear_page(struct TERMINAL *terminal) {
 	box(terminal->bg_color, 0, 0, terminal->xsize, terminal->ysize);
+}
+
+void newline(struct TERMINAL *terminal) {
+	terminal->crusor_x = 0;
+	terminal->crusor_y ++;
+	if (terminal->crusor_y == terminal->ylim) {
+		terminal->crusor_y = 0;
+		clear_page(terminal);
+	}
 }
 
 // // void clear_word(struct TERMINAL *terminal, int x, int y);

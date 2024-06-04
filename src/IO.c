@@ -108,6 +108,24 @@ int _fprintf(FILE *stream, const char *format, ...) {
                     break;
                 }
             }
+        }
+        else if (*p == '\\') {
+            p++;
+            switch(*p) {
+                case 'n':
+                    _write(stream, '\n');
+                    break;
+                case 't':
+                    _write(stream, '\t');
+                    break;
+                case '\\':
+                    _write(stream, '\\');
+                    break;
+                default:
+                    _write(stream, '\\');
+                    _write(stream, *p);
+                    break;
+            }
         } else {
             _write(stream, *p);
             count++;

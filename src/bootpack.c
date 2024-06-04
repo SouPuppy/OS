@@ -27,12 +27,13 @@ void initiate(void) {
 	init_palette();
 	init_io();			// # -2
 	init_main_terminal();	// # -1
-	_fprintf(stdout, "Initiated");
+	_fprintf(stdout, "Initiated\n\tHello world!\n");
 }
 
 void HariMain(void) {
 	int i;
 	initiate();
+	io_hlt();
 	for (;;) {
 		io_cli();
 		if (fifo_count(&keyfifo) == 0) {
@@ -41,7 +42,8 @@ void HariMain(void) {
 			i = fifo_deq(&keyfifo);
 			io_sti();
 
-			_fprintf(stdout, "%d", i);
+			_fprintf(stdout, "detect: %d, \t[%d/32] remaining\n", i, fifo_count(&keyfifo));
+			// _fprintf(stdout, "%c", '0' + fifo_count(&keyfifo));
 		}
 	}
 }
