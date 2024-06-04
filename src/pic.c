@@ -50,6 +50,6 @@ void inthandler2c(int *esp) { // mouse
 }
 
 void inthandler27(int *esp) {
-	io_out8(PIC0_OCW2, 0x67); /* 通知PIC的IRQ-07（参考7-1） */
+	io_out8(PIC0_OCW2, 0x67);
 	return;
 }

@@ -23,7 +23,6 @@
 #define withered_Tea    14
 #define black           15
 
-void dot(unsigned char color, int x, int y);
 void box(unsigned char color, int x0, int y0, int x1, int y1);
 void print_char(unsigned char color, int x, int y, char c);
 

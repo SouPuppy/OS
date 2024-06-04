@@ -17,13 +17,13 @@ VRAM      EQU        0x0ff8            ; VRAM start address
 
 ;; Set VGA video mode 320 x 200
 
-        MOV        AL,0x13            ; VGA graphics mode 320x200x8bit
-        MOV        AH,0x00
-        INT        0x10
-        MOV        BYTE [VMODE],8    ; Set video mode flag
-        MOV        WORD [SCRNX],320
-        MOV        WORD [SCRNY],200
-        MOV        DWORD [VRAM],0x000a0000
+        ;MOV        AL,0x13            ; VGA graphics mode 320x200x8bit
+        ;MOV        AH,0x00
+        ;INT        0x10
+        ;MOV        BYTE [VMODE],8    ; Set video mode flag
+        ;MOV        WORD [SCRNX],320
+        ;MOV        WORD [SCRNY],200
+        ;MOV        DWORD [VRAM],0x000a0000
 
 ;; Set VBE video mode 640 x 480
 
@@ -37,13 +37,13 @@ VRAM      EQU        0x0ff8            ; VRAM start address
 
 ; Set VBE video mode 1024 x 768
 
-        ;MOV        AX,0x4f02
-        ;MOV        BX,0x105
-        ;INT        0x10
-        ;MOV        BYTE [VMODE],8    ; Set video mode flag
-        ;MOV        WORD [SCRNX],1024 
-        ;MOV        WORD [SCRNY],768
-        ;MOV        DWORD [VRAM],0xe0000000 
+        MOV        AX,0x4f02
+        MOV        BX,0x105
+        INT        0x10
+        MOV        BYTE [VMODE],8    ; Set video mode flag
+        MOV        WORD [SCRNX],1024 
+        MOV        WORD [SCRNY],768
+        MOV        DWORD [VRAM],0xe0000000 
         
 ; Read keyboard LED status
 

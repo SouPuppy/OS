@@ -23,7 +23,7 @@ void initiate(void) {
 	// graphs
 	init_palette();
 	init_io();			// # -2
-	init_terminal();	// # -1
+	init_main_terminal();	// # -1
 	_fprintf(stdout, "Initiated");
 }
 

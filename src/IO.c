@@ -2,6 +2,7 @@
 #include "./H/bootinfo.h"
 #include "./H/display.h"
 #include "./H/io.h"
+#include "./H/terminal.h"
 
 extern struct BOOTINFO *boot_info;
 
@@ -24,13 +25,14 @@ int word_spacing = 1;
 
 int _write(FILE *stream, char c) {
     if (stream->_file == 1) { // stdout
-        static int x = 8, y = 8;
-        print_char(white, x, y, c);
-        x += 8 + word_spacing;
-        if (x >= boot_info->scrnx - 8 - word_spacing) {
-            x = 8;
-            y += 16;
-        }
+        // static int x = 8, y = 8;
+        // print_char(white, x, y, c);
+        // x += 8 + word_spacing;
+        // if (x >= boot_info->scrnx - 8 - word_spacing) {
+        //     x = 8;
+        //     y += 16;
+        // }
+        print(main_terminal, c);
         return 1;
     }
     return -1;
