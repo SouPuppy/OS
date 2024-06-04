@@ -25,18 +25,61 @@ void init_pic(void) {
 
 #define PORT_KEYDAT		0x0060
 
-// struct FIFO8 keyfifo;
+char keybuf[32];
+struct FIFO keyfifo;
 
-struct KEYBUF keybuf;
+void init_keyboard_buf() {
+	fifo_init(&keyfifo, 32, keybuf);
+}
+
+void fifo_init(struct FIFO *fifo, int size, unsigned char *buf) {
+	fifo->size = size;
+	fifo->buf = buf;
+	fifo->free = size;
+	fifo->flag = 0;
+
+	fifo->ptr_w = 0;
+	fifo->ptr_r = 0;
+}
+
+int fifo_enq(struct FIFO *fifo, unsigned char data) { // enqueue
+	if (fifo->free == 0) { // queue overflow~
+		fifo->flag |= FLAGS_OVERFLOW;
+		return -1;
+	}
+	fifo->buf[fifo->ptr_w] = data;
+	fifo->ptr_w ++;
+	if (fifo->ptr_w == fifo->size) {
+		fifo->ptr_w = 0;
+	}
+	fifo->free --;
+	return 0;
+}
+
+int fifo_deq(struct FIFO *fifo) { // dequeue
+	unsigned char data;
+	if (fifo->free == fifo->size) {
+		// no data
+		return -1;
+	}
+	data = fifo->buf[fifo->ptr_r];
+	fifo->ptr_r ++;
+	if (fifo->ptr_r == fifo->size) {
+		fifo->ptr_r = 0;
+	}
+	fifo->free ++;
+	return data;
+}
+
+int fifo_count(struct FIFO *fifo) {
+	return fifo->size - fifo->free;
+}
 
 void inthandler21(int *esp) { // keyboard
 	unsigned char data;
 	io_out8(PIC0_OCW2, 0x61);
 	data = io_in8(PORT_KEYDAT);
-	if (keybuf.flag == 0) {
-		keybuf.data = data;
-		keybuf.flag = 1;
-	}
+	fifo_enq(&keyfifo, data);
 	return ;
 }
 

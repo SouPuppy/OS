@@ -16,16 +16,28 @@
 #define PIC1_ICW3		0x00a1
 #define PIC1_ICW4		0x00a1
 
-typedef struct KEYBUF {
-	unsigned char data, flag;
-};
-
-extern struct KEYBUF keybuf;
-
 void init_pic(void);
 
 void inthandler21(int *esp);
 void inthandler27(int *esp);
 void inthandler2c(int *esp);
+
+
+
+#define FLAGS_OVERFLOW	0x0001
+
+typedef struct FIFO {
+	unsigned char *buf;
+	int ptr_r, ptr_w, size, free, flag;
+};
+
+extern struct FIFO keyfifo;
+
+void init_keyboard_buf(void);
+
+void fifo_init(struct FIFO *fifo, int size, unsigned char *buf);
+int fifo_enq(struct FIFO *fifo, unsigned char data);
+int fifo_deq(struct FIFO *fifo);
+int fifo_count(struct FIFO *fifo);
 
 #endif  // PIC_H

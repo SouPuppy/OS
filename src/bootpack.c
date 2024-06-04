@@ -10,6 +10,7 @@
 #include "./H/io.h"
 
 void initiate(void) {
+	init_keyboard_buf();
 	init_bootinfo();  	// #1
 
 	// 
@@ -18,8 +19,10 @@ void initiate(void) {
 	io_sti();			// set interrupt flag
 
 	io_out8(PIC0_IMR, 0xf9);	// KB 11111001
+	
 	io_out8(PIC1_IMR, 0xef);	// MS 11101111
 	
+
 	// graphs
 	init_palette();
 	init_io();			// # -2
@@ -28,17 +31,16 @@ void initiate(void) {
 }
 
 void HariMain(void) {
-	initiate();
 	int i;
+	initiate();
 	for (;;) {
 		io_cli();
-		if (keybuf.flag == 0) {
+		if (fifo_count(&keyfifo) == 0) {
 			io_stihlt();
 		} else {
-			i = keybuf.data;
-			keybuf.flag = 0;
+			i = fifo_deq(&keyfifo);
 			io_sti();
-			
+
 			_fprintf(stdout, "%d", i);
 		}
 	}
