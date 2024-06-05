@@ -23,15 +23,6 @@ void init_pic(void) {
 	return ;
 }
 
-#define PORT_KEYDAT		0x0060
-
-char keybuf[32];
-struct FIFO keyfifo;
-
-void init_keyboard_buf() {
-	fifo_init(&keyfifo, 32, keybuf);
-}
-
 void fifo_init(struct FIFO *fifo, int size, unsigned char *buf) {
 	fifo->size = size;
 	fifo->buf = buf;
@@ -84,15 +75,51 @@ void inthandler21(int *esp) { // keyboard
 }
 
 void inthandler2c(int *esp) { // mouse
-	// struct BOOTINFO *binfo = (struct BOOTINFO *) ADR_BOOTINFO;
-	// boxfill8(binfo->vram, binfo->scrnx, COL8_000000, 0, 0, 32 * 8 - 1, 15);
-	_fprintf(stdout, "INT 2C (IRQ-12) : PS/2 mouse");
-	for (;;) {
-		io_hlt();
-	}
+	unsigned char data;
+	io_out8(PIC1_OCW2, 0x64);
+	io_out8(PIC0_OCW2, 0x62);
+	data = io_in8(PORT_KEYDAT);
+	fifo_enq(&mousefifo, data);
+	return ;
 }
 
 void inthandler27(int *esp) {
 	io_out8(PIC0_OCW2, 0x67);
 	return;
+}
+
+char keybuf[32], mousebuf[128];
+struct FIFO keyfifo, mousefifo;
+
+void init_keyboard_buf() {
+	fifo_init(&keyfifo, 32, keybuf);
+}
+
+void init_mouse_buf() {
+	fifo_init(&mousefifo, 128, mousebuf);
+}
+
+void wait_KBC_sendready(void) {
+	for (;;) {
+		if ((io_in8(PORT_KEYSTA) & KEYSTA_SEND_NOTREADY) == 0) {
+			break;
+		}
+	}
+	return;
+}
+
+void enable_keyboard(void) {
+	wait_KBC_sendready();
+	io_out8(PORT_KEYCMD, KEYCMD_WRITE_MODE);
+	wait_KBC_sendready();
+	io_out8(PORT_KEYDAT, KBC_MODE);
+	return;
+}
+
+void enable_mouse(void) {
+	wait_KBC_sendready();
+	io_out8(PORT_KEYCMD, KEYCMD_SENDTO_MOUSE);
+	wait_KBC_sendready();
+	io_out8(PORT_KEYDAT, MOUSECMD_ENABLE);
+	return ;
 }

@@ -32,12 +32,29 @@ typedef struct FIFO {
 };
 
 extern struct FIFO keyfifo;
+extern struct FIFO mousefifo;
 
 void init_keyboard_buf(void);
+void init_mouse_buf(void);
 
 void fifo_init(struct FIFO *fifo, int size, unsigned char *buf);
 int fifo_enq(struct FIFO *fifo, unsigned char data);
 int fifo_deq(struct FIFO *fifo);
 int fifo_count(struct FIFO *fifo);
+
+#define PORT_KEYDAT				0x0060
+#define PORT_KEYSTA				0x0064
+#define PORT_KEYCMD				0x0064
+#define KEYSTA_SEND_NOTREADY	0x02
+#define KEYCMD_WRITE_MODE		0x60
+#define KBC_MODE				0x47
+
+void wait_KBC_sendready(void);
+void enable_keyboard(void);
+
+#define KEYCMD_SENDTO_MOUSE		0xd4
+#define MOUSECMD_ENABLE			0xf4
+
+void enable_mouse(void);
 
 #endif  // PIC_H
