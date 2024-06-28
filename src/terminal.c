@@ -5,11 +5,8 @@
 struct TERMINAL *main_terminal;
 // // #define px *1
 
-#define FONT_HEIGHT 16
-#define FONT_WEIGHT 8
-
 void init_main_terminal() {
-	init_terminal(main_terminal, black, white, boot_info->scrnx, boot_info->scrny, 2, 1);
+	init_terminal(main_terminal, skin, rose, boot_info->scrnx, boot_info->scrny, 2, 1);
 	clear_page(main_terminal);
 }
 
@@ -72,12 +69,7 @@ void newline(struct TERMINAL *terminal) {
 	}
 }
 
-// // void clear_word(struct TERMINAL *terminal, int x, int y);
-// // void clear_line(struct TERMINAL *terminal, int x);
-// // void clear_page(struct TERMINAL *terminal, void);
-// // void crusor_set(struct TERMINAL *terminal, int x, int y);
 
-// // void crusor_prev(struct TERMINAL *terminal);
 void crusor_next(struct TERMINAL *terminal) {
 	terminal->crusor_x ++;
 	if (terminal->crusor_x == terminal->xlim) {
@@ -89,5 +81,3 @@ void crusor_next(struct TERMINAL *terminal) {
 		}
 	}
 }
-// // void crusor_up	(struct TERMINAL *terminal);
-// // void crusor_down(struct TERMINAL *terminal);

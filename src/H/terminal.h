@@ -1,7 +1,8 @@
 #ifndef TERMINAL_H
 #define TERMINAL_H
 
-#include "common.h"
+#define FONT_HEIGHT 16
+#define FONT_WEIGHT 8
 
 typedef struct TERMINAL {
 	unsigned char bg_color, font_color;
@@ -23,5 +24,6 @@ void init_terminal(struct TERMINAL *terminal,
 void print(struct TERMINAL *terminal, char c);
 void refresh_page(struct TERMINAL *terminal);
 void crusor_next(struct TERMINAL *terminal);
+void write_at(struct TERMINAL *terminal, int x, int y);
 
 #endif  // TERMINAL_H

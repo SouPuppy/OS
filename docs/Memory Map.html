@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Map</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Memory Map</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Memory Range</th>
+                <th>Size</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0x00000000 - 0x000FFFFF</td>
+                <td>1 MB</td>
+                <td>Booting</td>
+            </tr>
+            <tr>
+                <td>0x00100000 - 0x00267FFF</td>
+                <td>1.44 MB</td>
+                <td>Disk Data</td>
+            </tr>
+            <tr>
+                <td>0x00268000 - 0x0026F7FF</td>
+                <td>30 KB</td>
+                <td>Empty</td>
+            </tr>
+            <tr>
+                <td>0x0026F800 - 0x0026FFFF</td>
+                <td>2 KB</td>
+                <td>IDT</td>
+            </tr>
+            <tr>
+                <td>0x00270000 - 0x0027FFFF</td>
+                <td>64 KB</td>
+                <td>GDT</td>
+            </tr>
+            <tr>
+                <td>0x00280000 - 0x002FFFFF</td>
+                <td>512 KB</td>
+                <td>bootpack.hrb</td>
+            </tr>
+            <tr>
+                <td>0x00300000 - 0x003FFFFF</td>
+                <td>1 MB</td>
+                <td>Stack</td>
+            </tr>
+            <tr>
+                <td>0x00400000 - ...</td>
+                <td>...</td>
+                <td>Empty</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

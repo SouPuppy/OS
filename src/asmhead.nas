@@ -73,10 +73,10 @@ VRAM      EQU        0x0ff8            ; VRAM start address
 
 [INSTRSET "i486p"]                ; Use 486 instructions
 
-        LGDT    [GDTR0]            ; Load GDT
+        LGDT       [GDTR0]            ; Load GDT
         MOV        EAX,CR0
         AND        EAX,0x7fffffff    ; Clear PG bit
-        OR        EAX,0x00000001    ; Set PE bit
+        OR         EAX,0x00000001    ; Set PE bit
         MOV        CR0,EAX
         JMP        pipelineflush
 pipelineflush:
@@ -92,14 +92,14 @@ pipelineflush:
         MOV        ESI,bootpack    ; Source
         MOV        EDI,BOTPAK        ; Destination
         MOV        ECX,512*1024/4
-        CALL    memcpy
+        CALL       memcpy
 
 ; Copy initial disk data
 
         MOV        ESI,0x7c00        ; Source
         MOV        EDI,DSKCAC        ; Destination
         MOV        ECX,512/4
-        CALL    memcpy
+        CALL       memcpy
 
 ; Copy remaining disk data
 
@@ -107,9 +107,9 @@ pipelineflush:
         MOV        EDI,DSKCAC+512    ; Destination
         MOV        ECX,0
         MOV        CL,BYTE [CYLS]
-        IMUL    ECX,512*18*2/4    ; Convert to bytes
+        IMUL       ECX,512*18*2/4    ; Convert to bytes
         SUB        ECX,512/4        ; Exclude boot sector
-        CALL    memcpy
+        CALL       memcpy
 
 ; Load bootpack
 
@@ -117,17 +117,17 @@ pipelineflush:
         MOV        ECX,[EBX+16]
         ADD        ECX,3            ; ECX += 3;
         SHR        ECX,2            ; ECX /= 4;
-        JZ        skip            ; Skip if zero
+        JZ         skip            ; Skip if zero
         MOV        ESI,[EBX+20]    ; Source
         ADD        ESI,EBX
         MOV        EDI,[EBX+12]    ; Destination
-        CALL    memcpy
+        CALL       memcpy
 skip:
         MOV        ESP,[EBX+12]    ; Set stack pointer
         JMP        DWORD 2*8:0x0000001b
 
 waitkbdout:
-        IN        AL,0x64
+        IN         AL,0x64
         AND        AL,0x02
         JNZ        waitkbdout        ; Loop until ready
         RET
@@ -144,7 +144,7 @@ memcpy:
 
         ALIGNB    16
 GDT0:
-        RESB    8                ; Null descriptor
+        RESB      8                ; Null descriptor
         DW        0xffff,0x0000,0x9200,0x00cf    ; Data segment
         DW        0xffff,0x0000,0x9a28,0x0047    ; Code segment
 
