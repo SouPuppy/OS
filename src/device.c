@@ -82,9 +82,9 @@ void init_mouse() {
     mouse.y = mouse.ylim / 2;
 }
 
-void display_mouse() {
-    box(white, mouse.x, mouse.y, mouse.x + 8, mouse.y + 16);
-}
+// void display_mouse() {
+//     box(white, mouse.x, mouse.y, mouse.x + 8, mouse.y + 16);
+// }
 
 void mouse_update(int det_x, int det_y) {
     mouse.x = mouse.x + det_x;

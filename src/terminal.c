@@ -6,7 +6,7 @@ struct TERMINAL *main_terminal;
 // // #define px *1
 
 void init_main_terminal() {
-	init_terminal(main_terminal, skin, rose, boot_info->scrnx, boot_info->scrny, 2, 1);
+	init_terminal(main_terminal, black, white, boot_info->scrnx, boot_info->scrny, 2, 1);
 	clear_page(main_terminal);
 }
 
@@ -57,7 +57,7 @@ void print(struct TERMINAL *terminal, char c) {
 }
 
 void clear_page(struct TERMINAL *terminal) {
-	box(terminal->bg_color, 0, 0, terminal->xsize, terminal->ysize);
+	// box(terminal->bg_color, 0, 0, terminal->xsize, terminal->ysize);
 }
 
 void newline(struct TERMINAL *terminal) {

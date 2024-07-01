@@ -5,11 +5,11 @@ typedef struct MOUSE_DET {
     unsigned char buf[3], phase;
     int x, y;
     int btn; // 001 'L', 010 'R', 100 'C'
-};
+} MOUSE_DET;
 
 typedef struct KEYBOARD_DET {
     unsigned char data;
-};
+} KEYBOARD_DET;
 
 extern struct MOUSE_DET    *ms_det;
 extern struct KEYBOARD_DET *kb_det;
@@ -26,12 +26,10 @@ int detect_keyboard();
 typedef struct MOUSE {
     int x, y;
     int xlim, ylim;
-};
+} MOUSE;
 
 extern struct MOUSE mouse;
 
 void init_mouse();
-void display_mouse();
-void mouse_update(int det_x, int det_y);
 
 #endif  // device_h

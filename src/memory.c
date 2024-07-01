@@ -31,15 +31,15 @@ unsigned int memtest(unsigned int start, unsigned int end) {
     return i;
 }
 
-struct MEMMAN *memman;
+struct MEMMAN *mem_man;
 
 void init_memman() {
     unsigned int mem_total;
-    memman = (struct MEMMAN *) MEMMAN_ADDR;
+    mem_man = (struct MEMMAN *) MEMMAN_ADDR;
     mem_total = memtest(0x00400000, 0xffffffff);
-    memman_init(memman);
-    memman_free(memman, 0x00001000, 0x0009e000); 
-    memman_free(memman, 0x00400000, mem_total - 0x00400000);
+    memman_init(mem_man);
+    memman_free(mem_man, 0x00001000, 0x0009e000); 
+    memman_free(mem_man, 0x00400000, mem_total - 0x00400000);
 }
 
 void memman_init(struct MEMMAN *man) {
@@ -122,11 +122,26 @@ int memman_free (struct MEMMAN *man, unsigned int addr, unsigned int size) {
     man->lostsize += size;
     return -1;
 }
+
+unsigned int memman_alloc_4k (struct MEMMAN *man, unsigned int size) {
+    unsigned int a;
+    size = (size + 0xfff) & 0xfffff000;
+    a = memman_alloc(man, size);
+    return a;
+}
+
+int memman_free_4k  (struct MEMMAN *man, unsigned int addr, unsigned int size) {
+    int i ;
+    size = (size + 0xfff) & 0xfffff000;
+    i = memman_free(man, addr, size);
+    return i;
+}
+
 #include "./H/io.h"
 
 void mem_debug() {
     const int i = 11;
     _fprintf(stdout, "Total memory %d MB | Free memory  %d KB\n",
      memtest(0x00400000, 0xffffffff) / (1024 * 1024),
-     memman_total(memman) / (1024));
+     memman_total(mem_man) / (1024));
 }

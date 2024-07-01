@@ -29,7 +29,7 @@ void inthandler2c(int *esp);
 typedef struct FIFO {
 	unsigned char *buf;
 	int ptr_r, ptr_w, size, free, flag;
-};
+} FIFO;
 
 extern struct FIFO keyfifo;
 extern struct FIFO mousefifo;

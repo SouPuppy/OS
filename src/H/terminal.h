@@ -12,7 +12,7 @@ typedef struct TERMINAL {
 	int mouse_x, mouse_y;
 	int skip_line, skip_word;
     // char *buff;
-};
+} TERMINAL;
 
 extern struct TERMINAL *main_terminal;
 
@@ -25,5 +25,7 @@ void print(struct TERMINAL *terminal, char c);
 void refresh_page(struct TERMINAL *terminal);
 void crusor_next(struct TERMINAL *terminal);
 void write_at(struct TERMINAL *terminal, int x, int y);
+void clear_page(struct TERMINAL *terminal);
+void newline(struct TERMINAL *terminal);
 
 #endif  // TERMINAL_H

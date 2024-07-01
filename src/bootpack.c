@@ -9,6 +9,9 @@
 
 #include "./H/io.h"
 #include "./H/memory.h"
+#include "H/display.h"
+#include "H/windows.h"
+
 
 void initiate(void) {
 	init_bootinfo();
@@ -20,6 +23,8 @@ void initiate(void) {
 
 	init_palette();
 	init_io();
+
+	init_windows();				// windows.h
 	init_main_terminal();
 
 
@@ -33,6 +38,7 @@ void initiate(void) {
 	enable_mouse();				// pic.h
 
 	init_mouse();
+	
 	_fprintf(stdout, "Initiated\n\tHello world!\n");
 }
 
@@ -41,18 +47,18 @@ void HariMain(void) {
 	mem_debug();
 	for (;;) {
 		{
-			// display_mouse();
+			// display_crusor();
 		}
 
 		io_cli();
 		if		(detect_mouse(ms_det) == 3) {
 			_fprintf(stdout, "MOUSE [%d\t%d]\t%c\n", ms_det->x, ms_det->y, "_LR C"[ms_det->btn]);
 			
-			mouse_update(ms_det->x, ms_det->y);
+			update_crusor_position(ms_det->x, ms_det->y);
 		}
 		else if (detect_keyboard(kb_det) == 1) {
 			
-			_fprintf(stdout, "KEYBOARD %d\n", kb_det->data);
+			// _fprintf(stdout, "KEYBOARD %d\n", kb_det->data);
 		}
 		else {
 			io_stihlt();
