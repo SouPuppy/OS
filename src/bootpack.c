@@ -60,6 +60,7 @@ void HariMain(void) {
 		else if (detect_keyboard(kb_det) == 1) {
 			
 			_fprintf(stdout, "KEYBOARD %d\n", kb_det->data);
+			windows_refresh(WINDOWS);
 		}
 		else {
 			io_stihlt();
