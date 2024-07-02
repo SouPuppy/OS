@@ -15,12 +15,13 @@ void box(char *vram, unsigned char color, int frame_width, int x0, int y0, int x
     return ;
 }
 
-void print_char(unsigned char color, int x, int y, char c) {
+
+void print_char(char *vram, unsigned char color, int fram_width, int x, int y, char c) {
     int i;
     char *p, d;
 
     for (i = 0; i < 16; i++) {
-        p = (char *)boot_info->vram + ((y + i) * (int)boot_info->scrnx) + x;
+        p = (char *)vram + ((y + i) * (int)fram_width) + x;
         d = EZ_font[c * 16 + i];
         if ((d & 0x80) != 0) p[0] = color;
         if ((d & 0x40) != 0) p[1] = color;

@@ -235,3 +235,13 @@ void display_crusor() {
     crusor_x, crusor_y,
     LAYER_BUFF_CRUSOR);
 }
+
+// Should Check for boundary
+struct Layer *new_layer(int x0, int y0, unsigned char *buff, int weight, int height) {
+    int new_layer_level = LAYER_CRUSOR->level;
+    struct Layer *ret = layer_alloc(WINDOWS);
+    layer_setbuff(ret, buff, weight, height, 99);
+    layer_slide(WINDOWS, ret, x0, y0);
+    layer_elevation(WINDOWS, ret, new_layer_level);
+    return ret;
+}

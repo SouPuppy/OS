@@ -15,7 +15,7 @@ extern FILE *stdout;
 extern FILE *stderr;
 
 void init_io(void);
-void print_char(unsigned char color, int x, int y, char c);
+// void print_char(unsigned char *buff, unsigned char color, int x, int y, char c);
 int _write(FILE *stream, char c);
 void itoa(int num, char *str);
 int _fprintf(FILE *stream, const char *format, ...);

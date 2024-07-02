@@ -1,6 +1,8 @@
 #ifndef memory_h
 #define memory_h
 
+#include "common.h"
+
 #define EFLAGS_AC_BIT       0x00040000
 #define CR0_CACHE_DISABLE   0x60000000
 
@@ -29,5 +31,10 @@ int             memman_free     (struct MEMMAN *man, unsigned int addr, unsigned
 int             memman_free_4k  (struct MEMMAN *man, unsigned int addr, unsigned int size);
 
 void mem_debug();
+
+// APP  FUNC
+
+void *malloc(unsigned int size);
+int free(void *ptr);
 
 #endif  // memory_h

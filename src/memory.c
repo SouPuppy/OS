@@ -145,3 +145,37 @@ void mem_debug() {
      memtest(0x00400000, 0xffffffff) / (1024 * 1024),
      memman_total(mem_man) / (1024));
 }
+
+// APP FUNC
+
+void *malloc(unsigned int size) {
+    unsigned int mem_addr;
+    
+    if (size == 0) {
+        return NULL;
+    }
+
+    mem_addr = memman_alloc(mem_man, sizeof(unsigned int) + (unsigned int)size);
+    
+    if (mem_addr == 0) {
+        return NULL;
+    }
+
+    return (void *)(mem_addr + sizeof(unsigned int));
+}
+
+int free(void *ptr) {
+    if (ptr == NULL) {
+        return -1;
+    }
+
+    unsigned int mem_addr = (unsigned int)ptr - sizeof(unsigned int);
+
+    if (mem_addr < sizeof(unsigned int)) {
+        return -1;
+    }
+
+    unsigned int size = *((unsigned int *)mem_addr);
+
+    return memman_free(mem_man, mem_addr, size);
+}

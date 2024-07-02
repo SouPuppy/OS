@@ -1,22 +1,29 @@
 #include "./H/terminal.h"
 #include "./H/display.h"
 #include "./H/bootinfo.h"
+#include "./H/windows.h"
+#include "./H/memory.h"
+#include "H/io.h"
 
 struct TERMINAL *main_terminal;
 // // #define px *1
 
 void init_main_terminal() {
-	init_terminal(main_terminal, black, white, boot_info->scrnx, boot_info->scrny, 2, 1);
+	init_terminal(main_terminal, black, white, 200, 200, 480, 360, 2, 1);
 	clear_page(main_terminal);
 }
 
 void init_terminal(struct TERMINAL *terminal,
 					unsigned char _bg_color, unsigned char _font_color,
+					int x0	  , int y0	  ,
 					int _xsize, int _ysize,
 					int _skipl, int _skipw) {
 	// buff = allocate(xlim * ylim, char)
 	terminal->bg_color = _bg_color;
 	terminal->font_color = _font_color;
+
+	terminal->x0 = x0;
+	terminal->y0 = y0;
 
 	terminal->xsize = _xsize;
 	terminal->ysize = _ysize;
@@ -28,6 +35,11 @@ void init_terminal(struct TERMINAL *terminal,
 	
 	terminal->crusor_x = 0;
 	terminal->crusor_y = 0;
+
+	terminal->buff = malloc(terminal->xsize * terminal->ysize * sizeof (unsigned char));
+	clear_page(terminal);
+
+	terminal->window = new_layer(terminal->x0, terminal->y0, terminal->buff, terminal->xsize, terminal->ysize);
 }
 
 #define TAB_LENGTH 4
@@ -39,7 +51,8 @@ void print(struct TERMINAL *terminal, char c) {
 			break;
 		case '\t':
             do {
-                print_char(terminal->font_color,
+                print_char(terminal->buff, 
+						   terminal->font_color, terminal->xsize,
                            terminal->crusor_x * (FONT_WEIGHT + terminal->skip_line),
                            terminal->crusor_y * (FONT_HEIGHT + terminal->skip_word),
                            ' ');
@@ -47,7 +60,8 @@ void print(struct TERMINAL *terminal, char c) {
             } while (terminal->crusor_x % TAB_LENGTH != 0);
 			break;
 		default:
-            print_char(terminal->font_color,
+            print_char(terminal->buff,
+					   terminal->font_color, terminal->xsize,
                        terminal->crusor_x * (FONT_WEIGHT + terminal->skip_line),
                        terminal->crusor_y * (FONT_HEIGHT + terminal->skip_word),
                        c);
@@ -57,7 +71,10 @@ void print(struct TERMINAL *terminal, char c) {
 }
 
 void clear_page(struct TERMINAL *terminal) {
-	// box(terminal->bg_color, 0, 0, terminal->xsize, terminal->ysize);
+	int i, size = terminal->xsize * terminal->ysize;
+	for (i = 0; i < size; i++) {
+		terminal->buff[i] = terminal->bg_color;
+	}
 }
 
 void newline(struct TERMINAL *terminal) {
