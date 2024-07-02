@@ -9,7 +9,7 @@ struct TERMINAL *main_terminal;
 // // #define px *1
 
 void init_main_terminal() {
-	init_terminal(main_terminal, black, white, 200, 200, 480, 360, 2, 1);
+	init_terminal(main_terminal, dark_blue, white, 200, 200, 480, 360, 2, 1);
 	clear_page(main_terminal);
 }
 

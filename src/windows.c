@@ -13,7 +13,7 @@ unsigned char   LAYER_BUFF_CRUSOR[256];
 #include "./H/bootinfo.h"
 #include "./H/display.h"
 
-#define BACK_COLOR green
+#define BACK_COLOR dark_teal
 #define COLOR_INVISIBLE 99
 
 int crusor_x, crusor_y;
