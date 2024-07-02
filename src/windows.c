@@ -12,12 +12,13 @@ unsigned char   LAYER_BUFF_CRUSOR[256];
 #include "./H/display.h"
 
 #define BACK_COLOR green
+#define COLOR_INVISIBLE 99
 
 int crusor_x, crusor_y;
 
 void init_crusor() {
     // preparing buff
-    init_mouse_cursor(LAYER_BUFF_CRUSOR, BACK_COLOR);
+    init_mouse_cursor(LAYER_BUFF_CRUSOR, COLOR_INVISIBLE);
     crusor_x = boot_info->scrnx / 2;
     crusor_y = boot_info->scrny / 2;
 
@@ -25,7 +26,7 @@ void init_crusor() {
     LAYER_CRUSOR = layer_alloc(WINDOWS);
 
     // init layer
-    layer_setbuff(LAYER_CRUSOR, LAYER_BUFF_CRUSOR, 16, 16,  99);
+    layer_setbuff(LAYER_CRUSOR, LAYER_BUFF_CRUSOR, 16, 16,  COLOR_INVISIBLE);
     layer_slide(WINDOWS, LAYER_CRUSOR, crusor_x, crusor_y);
     layer_elevation(WINDOWS, LAYER_CRUSOR, 1);
 }
@@ -202,6 +203,29 @@ void windows_refresh(struct Windows *windows) {
     return ;
 }
 
+// void windows_refresh_partial(struct Windows *windows, int x0, int y0, int x1, int y1) {
+//     int i, bx, by, x0, y0; // bias_y, y0,
+//     unsigned char *buff, data, *vram = windows->vram;
+//     struct Layer *layer;
+//     for (i = 0; i <= windows->top; i++) {
+//         layer = windows->ordered_layers[i];
+//         buff  = layer->buff;
+//         for (by = 0; by < layer->height; by++) {
+//             y0 = layer->y + by; // can optimize by deleting y0;
+//             for (bx = 0; bx < layer->weight; bx++) {
+//                 x0 = layer->x + bx;
+//                 // position in layer    : by * layer->weight + bx
+//                 // position in windows  : y0 * windows->weight + x0
+//                 data = buff[by * layer->weight + bx];
+//                 if (data != layer->col_inv) {
+//                     vram[y0 * windows->weight + x0] = data;
+//                 }
+//             }
+//         } 
+//     }
+//     return ;
+// }
+
 void layer_slide(struct Windows *windows, struct Layer *layer, int new_x, int new_y) {
     layer->x = new_x;
     layer->y = new_y;
@@ -228,12 +252,6 @@ void update_crusor_position(int det_x, int det_y) {
     if (crusor_y> boot_info->scrny - 16 ) crusor_y = boot_info->scrny - 16;
     layer_slide(WINDOWS, LAYER_CRUSOR, crusor_x, crusor_y);
     return ;
-}
-
-void display_crusor() {
-    block_of_color(boot_info->vram, boot_info->scrnx, boot_info->scrny, 16, 16, 
-    crusor_x, crusor_y,
-    LAYER_BUFF_CRUSOR);
 }
 
 // Should Check for boundary

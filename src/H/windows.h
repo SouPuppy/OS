@@ -45,7 +45,6 @@ void          windows_refresh(struct Windows *windows);
 void          layer_slide(struct Windows *windows, struct Layer *layer, int new_x, int new_y);
 void          layer_free(struct Windows *windows, struct Layer *layer);
 void          update_crusor_position(int det_x, int det_y);
-void          display_crusor();
 
 // APP FUNC
 struct Layer *new_layer(int x0, int y0, unsigned char *buff, int weight, int height);
