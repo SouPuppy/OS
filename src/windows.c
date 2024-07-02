@@ -1,5 +1,7 @@
+#include "./H/common.h"
 #include "./H/windows.h"
 #include "./H/memory.h"
+#include "H/io.h"
 
 struct Windows *WINDOWS;
 
@@ -98,7 +100,7 @@ struct Windows *windows_init(struct MEMMAN *man, unsigned char *vram, int xsize,
         goto err;
     }
     windows->vram   = vram;
-    windows->weight = xsize;
+    windows->width = xsize;
     windows->height = ysize;
     windows->top    = -1;
     for (i = 0; i < MAX_LAYERS; i++) {
@@ -122,9 +124,9 @@ struct Layer *layer_alloc(struct Windows *windows) {
     return 0;
 }
 
-void layer_setbuff(struct Layer *layer, unsigned char *buff, int weight, int height, int col_inv) {
+void layer_setbuff(struct Layer *layer, unsigned char *buff, int width, int height, int col_inv) {
     layer->buff     = buff;
-    layer->weight   = weight;
+    layer->width   = width;
     layer->height   = height;
     layer->col_inv  = col_inv;
     return ;
@@ -181,21 +183,21 @@ void layer_elevation(struct Windows *windows, struct Layer *layer, int level) {
 }
 
 void windows_refresh(struct Windows *windows) {
-    int i, bx, by, x0, y0; // bias_y, y0,
+    int i, bx, by, x, y; // bias_y, y,
     unsigned char *buff, data, *vram = windows->vram;
     struct Layer *layer;
     for (i = 0; i <= windows->top; i++) {
         layer = windows->ordered_layers[i];
         buff  = layer->buff;
         for (by = 0; by < layer->height; by++) {
-            y0 = layer->y + by; // can optimize by deleting y0;
-            for (bx = 0; bx < layer->weight; bx++) {
-                x0 = layer->x + bx;
-                // position in layer    : by * layer->weight + bx
-                // position in windows  : y0 * windows->weight + x0
-                data = buff[by * layer->weight + bx];
+            y = layer->y + by; // can optimize by deleting y;
+            for (bx = 0; bx < layer->width; bx++) {
+                x = layer->x + bx;
+                // position in layer    : by * layer->width + bx
+                // position in windows  : y * windows->width + x
+                data = buff[by * layer->width + bx];
                 if (data != layer->col_inv) {
-                    vram[y0 * windows->weight + x0] = data;
+                    vram[y * windows->width + x] = data;
                 }
             }
         } 
@@ -203,34 +205,44 @@ void windows_refresh(struct Windows *windows) {
     return ;
 }
 
-// void windows_refresh_partial(struct Windows *windows, int x0, int y0, int x1, int y1) {
-//     int i, bx, by, x0, y0; // bias_y, y0,
-//     unsigned char *buff, data, *vram = windows->vram;
-//     struct Layer *layer;
-//     for (i = 0; i <= windows->top; i++) {
-//         layer = windows->ordered_layers[i];
-//         buff  = layer->buff;
-//         for (by = 0; by < layer->height; by++) {
-//             y0 = layer->y + by; // can optimize by deleting y0;
-//             for (bx = 0; bx < layer->weight; bx++) {
-//                 x0 = layer->x + bx;
-//                 // position in layer    : by * layer->weight + bx
-//                 // position in windows  : y0 * windows->weight + x0
-//                 data = buff[by * layer->weight + bx];
-//                 if (data != layer->col_inv) {
-//                     vram[y0 * windows->weight + x0] = data;
-//                 }
-//             }
-//         } 
-//     }
-//     return ;
-// }
+void windows_refresh_partial(struct Windows *windows, int x0, int y0, int x1, int y1) {
+    int i, ix, iy, bx, by;
+    int y_min, y_max, x_min, x_max;
+    unsigned char *buff, data, *vram = windows->vram;
+    struct Layer *layer;
+    for (i = 0; i <= windows->top; i++) {
+        layer = windows->ordered_layers[i];
+        buff  = layer->buff;
+        x_min = max(x0, layer->x);
+        x_max = min(x1, layer->x + layer->width);
+        y_min = max(y0, layer->y);
+        y_max = min(y1, layer->y + layer->height);
+
+        // _fprintf("[%d, %d] [%d, %d]   [%d, %d] [%d, %d]   |   [%d, %d] [%d, %d]\n", 
+        // &x0, &y0, &x1, &y1, 
+        // &layer->x, &layer->y, &layer->x + layer->width, &layer->y + layer->height,
+        // &x_min, &y_min, &x_max, &y_max
+        // );
+
+        for (iy = y_min, by = y_min - layer->y; iy < y_max; by++, iy++) {
+            for (ix = x_min, bx = x_min - layer->x; ix < x_max; bx++, ix++) {
+                data = buff[by * layer->width + bx];
+                if (data != layer->col_inv) {
+                    vram[iy * windows->width + ix] = data;
+                }
+            }
+        }
+    }
+    return ;
+}
 
 void layer_slide(struct Windows *windows, struct Layer *layer, int new_x, int new_y) {
+    int old_x = layer->x, old_y = layer->y;
     layer->x = new_x;
     layer->y = new_y;
     if (layer->level >= 0) { // On Dislplay
-        windows_refresh(windows);
+        windows_refresh_partial(windows, old_x, old_y, old_x + layer->width, old_y + layer->height);
+        windows_refresh_partial(windows, layer->x, layer->y, layer->x + layer->width, layer->y + layer->height);
     }
     return ;
 }
@@ -255,11 +267,27 @@ void update_crusor_position(int det_x, int det_y) {
 }
 
 // Should Check for boundary
-struct Layer *new_layer(int x0, int y0, unsigned char *buff, int weight, int height) {
+struct Layer *new_layer(int x0, int y0, unsigned char *buff, int width, int height) {
     int new_layer_level = LAYER_CRUSOR->level;
     struct Layer *ret = layer_alloc(WINDOWS);
-    layer_setbuff(ret, buff, weight, height, 99);
+    layer_setbuff(ret, buff, width, height, 99);
     layer_slide(WINDOWS, ret, x0, y0);
     layer_elevation(WINDOWS, ret, new_layer_level);
+    // refresh
+    ///
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
     return ret;
 }

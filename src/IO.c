@@ -125,7 +125,9 @@ int _fprintf(FILE *stream, const char *format, ...) {
         }
         p++;
     }
-
+    if (stream == stdout) {
+        windows_refresh(WINDOWS);
+    }
     return count;
     return 1;
 }

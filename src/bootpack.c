@@ -53,14 +53,12 @@ void HariMain(void) {
 
 		io_cli();
 		if (detect_mouse(ms_det) == 3) {
-			_fprintf(stdout, "MOUSE [%d\t%d]\t%c\n", ms_det->x, ms_det->y, "_LR C"[ms_det->btn]);
-			
+			// _fprintf(stdout, "MOUSE [%d\t%d]\t%c\n", ms_det->x, ms_det->y, "_LR C"[ms_det->btn]);
 			update_crusor_position(ms_det->x, ms_det->y);
 		}
 		else if (detect_keyboard(kb_det) == 1) {
 			
-			_fprintf(stdout, "KEYBOARD %d\n", kb_det->data);
-			windows_refresh(WINDOWS);
+			// _fprintf(stdout, "KEYBOARD %d\n", kb_det->data);
 		}
 		else {
 			io_stihlt();

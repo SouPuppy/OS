@@ -43,4 +43,7 @@ void asm_inthandler2c(void);
 #define WORD(addr) ((uint16_t *)(addr))
 #define DWORD(addr) ((uint32_t *)(addr))
 
+#define min(a, b) (a < b ? a : b)
+#define max(a, b) (a < b ? b : a)
+
 #endif  // GENERAL_H

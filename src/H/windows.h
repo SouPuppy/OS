@@ -8,7 +8,7 @@
 
 typedef struct Layer {
     unsigned char *buff;
-    int weight, height;
+    int width, height;
     int x, y;
     int col_inv; // color invisible
     int level;
@@ -19,7 +19,7 @@ typedef struct Layer {
 
 typedef struct Windows {
     unsigned char *vram;
-    int weight, height, top;
+    int width, height, top;
     struct Layer * ordered_layers[MAX_LAYERS];
     struct Layer unordered_layers[MAX_LAYERS];
 } Windows;
