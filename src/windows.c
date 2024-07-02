@@ -11,7 +11,7 @@ unsigned char   LAYER_BUFF_CRUSOR[256];
 #include "./H/bootinfo.h"
 #include "./H/display.h"
 
-#define BACK_COLOR iris
+#define BACK_COLOR green
 
 int crusor_x, crusor_y;
 
@@ -70,7 +70,7 @@ void init_mouse_cursor(char *mouse, char back_color) {
 void init_background() {
     // preparing buff
     LAYER_BUFF_BACKGROUND = (unsigned char *) memman_alloc_4k(mem_man, boot_info->scrnx * boot_info->scrny);
-    box(LAYER_BUFF_BACKGROUND, green, boot_info->scrnx, 0, 0, boot_info->scrnx, boot_info->scrny);
+    box(LAYER_BUFF_BACKGROUND, BACK_COLOR, boot_info->scrnx, 0, 0, boot_info->scrnx, boot_info->scrny);
 
     // applying for a new layer
     LAYER_BACKGROUND = layer_alloc(WINDOWS);
@@ -130,59 +130,52 @@ void layer_setbuff(struct Layer *layer, unsigned char *buff, int weight, int hei
 }
 
 void layer_elevation(struct Windows *windows, struct Layer *layer, int level) {
-    // int i, old_level = layer->level;
+    int i, old_level = layer->level;
 
-    // if (level > windows->top + 1) {
-    //     level = windows->top + 1;
-    // }
-    // if (level < -1) {
-    //     level = -1;
-    // }
-
+    if (level == old_level) return ;
+    if (level > windows->top + 1)  level = windows->top + 1;
+    if (level < -1)     level = -1;
+    
     layer->level = level;
-    windows->ordered_layers[level] = layer;
-    windows->top++;
 
-    // // old_level > level
-    // if (old_level > level) {
-    //     if (level >= 0) {
-    //         for (i = old_level; i > level; i--) {
-    //             windows->ordered_layers[i] = windows->ordered_layers[i - 1];
-    //             windows->ordered_layers[i]->level = i;
-    //         }
-    //         windows->ordered_layers[level] = layer;
-    //     }
-    //     else { // Hide layer
-    //         if (windows->top > old_level) {
-    //             for (i = old_level; i < windows->top; i++) {
-    //                 windows->ordered_layers[i] = windows->ordered_layers[i + 1];
-    //                 windows->ordered_layers[i]->level = i;
-    //             }
-    //         }
-    //         windows->top--;
-    //     }
-    //     windows_refresh(windows);
-    // }
+    if (level < old_level) {
+        if (level > -1) {
+            for (i = old_level; i > level; i--) {
+                windows->ordered_layers[i] = windows->ordered_layers[i - 1];
+                windows->ordered_layers[i]->level = i;
+            }
+            windows->ordered_layers[level] = layer;
+        }
+        // HIDE THIS LAYER
+        else {
+            if (old_level != windows->top) {
+                for (i = old_level; i < windows->top; i++) {
+                    windows->ordered_layers[i] = windows->ordered_layers[i + 1];
+                    windows->ordered_layers[i]->level = i;
+                }
+            }
+            windows->top--;
+        }
+    }
 
-    // // old_level < level
-    // else if (old_level < level) {
-    //     if (level >= 0) {
-    //         for (i = old_level; i < level; i++) {
-    //             windows->ordered_layers[i] = windows->ordered_layers[i + 1];
-    //             windows->ordered_layers[i]->level = i;
-    //         }
-    //         windows->ordered_layers[level] = layer;
-    //     }
-    //     else { // unHide layer
-    //         for (i = windows->top; i >= level ; i--) {
-    //             windows->ordered_layers[i + 1] = windows->ordered_layers[i];
-    //             windows->ordered_layers[i + 1]->level = i + 1;
-    //         }
-    //         windows->ordered_layers[level] = layer;
-    //         windows->top ++;
-    //     }
-    //     windows_refresh(windows);
-    // }
+    else {
+        if (old_level > -1) {
+            for (i = old_level; i < level; i++) {
+                windows->ordered_layers[i] = windows->ordered_layers[i + 1];
+                windows->ordered_layers[i]->level = i;
+            }
+            windows->ordered_layers[level] = layer;
+        }
+        else {
+            for (i = windows->top; i >= level; i--) {
+                windows->ordered_layers[i + 1] = windows->ordered_layers[i];
+                windows->ordered_layers[i + 1]->level = i + 1;
+            }
+            windows->top ++;
+            windows->ordered_layers[level] = layer;
+        }
+    }
+    windows_refresh(windows);
     return ;
 }
 
