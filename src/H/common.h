@@ -35,7 +35,9 @@ void asm_inthandler2c(void);
 #define  uint32_t   unsigned int
 #define  size_t     unsigned int
 
-#define NULL ((void*)0)
+#define NULL    ((void*)0)
+#define false   0
+#define true    1
 
 // ----- other functions ----- 
 

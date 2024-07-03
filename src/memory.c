@@ -140,13 +140,39 @@ int memman_free_4k  (struct MEMMAN *man, unsigned int addr, unsigned int size) {
 #include "./H/io.h"
 
 void mem_debug() {
-    const int i = 11;
     _fprintf(stdout, "Total memory %d MB | Free memory  %d KB\n",
      memtest(0x00400000, 0xffffffff) / (1024 * 1024),
      memman_total(mem_man) / (1024));
+
+    
+    // _fprintf(stdout, "Total memory %d B | Free memory  %d B\n",
+    //  memtest(0x00400000, 0xffffffff),
+    //  memman_total(mem_man));
 }
 
 // APP FUNC
+
+//? #define data_size(ptr) *((unsigned int *)((unsigned int)ptr - sizeof(unsigned int)))
+
+void *memcpy(void *dest, const void *src, size_t n) {
+    unsigned char *d = (unsigned char *)dest;
+    const unsigned char *s = (const unsigned char *)src;
+
+    // Copy by 4 bytes (assuming 32-bit system and addresses are aligned)
+    while (n >= sizeof(unsigned int)) {
+        *(unsigned int *)d = *(const unsigned int *)s;
+        d += sizeof(unsigned int);
+        s += sizeof(unsigned int);
+        n -= sizeof(unsigned int);
+    }
+
+    // Copy remaining bytes
+    while (n--) {
+        *d++ = *s++;
+    }
+
+    return dest;
+}
 
 void *malloc(unsigned int size) {
     unsigned int mem_addr;
@@ -178,4 +204,42 @@ int free(void *ptr) {
     unsigned int size = *((unsigned int *)mem_addr);
 
     return memman_free(mem_man, mem_addr, size);
+}
+
+
+void *realloc(void *old_ptr, unsigned int size) {
+    if (size == 0) {
+        free(old_ptr);
+        return NULL;
+    }
+    void *new_ptr = malloc(size);
+    if(old_ptr == NULL) {
+        return new_ptr; 
+    }
+
+    unsigned int old_addr = (unsigned int)old_ptr - sizeof(unsigned int);
+    unsigned int old_size = *((unsigned int *)old_addr);
+
+    memcpy(new_ptr, old_ptr, min(old_size, size));
+
+    free(old_ptr);
+
+    return new_ptr;
+}
+
+
+
+//* Self Adapting Container
+
+void* reallocate(void* pointer, size_t oldSize, size_t newSize) {
+    if (newSize == 0) {
+        free(pointer);
+        return NULL;
+    }
+
+    void* result = realloc(pointer, newSize);
+    
+    //? This error I don't think will happen
+    // if (result == NULL) exit(1);
+    return result;
 }

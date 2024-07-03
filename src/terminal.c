@@ -6,11 +6,14 @@
 #include "H/io.h"
 
 struct TERMINAL *main_terminal;
-// // #define px *1
+
+//? TEST ONLY
+//! FAILED TO LOAD 2nd terminal
+//// struct TERMINAL *second_terminal;
 
 void init_main_terminal() {
 	init_terminal(main_terminal, dark_blue, white, 200, 200, 480, 360, 2, 1);
-	clear_page(main_terminal);
+	//// init_terminal(second_terminal, iris, white, 10, 10, 150, 300, 2, 1);
 }
 
 void init_terminal(struct TERMINAL *terminal,
@@ -19,6 +22,8 @@ void init_terminal(struct TERMINAL *terminal,
 					int _xsize, int _ysize,
 					int _skipl, int _skipw) {
 	// buff = allocate(xlim * ylim, char)
+	// terminal = malloc(sizeof (struct TERMINAL));
+
 	terminal->bg_color = _bg_color;
 	terminal->font_color = _font_color;
 

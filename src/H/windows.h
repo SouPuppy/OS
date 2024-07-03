@@ -13,7 +13,7 @@ typedef struct Layer {
     int col_inv; // color invisible
     int level;
     int flag;
-} Layer, Window;
+} Layer;
 
 #define MAX_LAYERS  256
 
@@ -25,23 +25,22 @@ typedef struct Windows {
 } Windows;
 
 extern struct Windows *WINDOWS;
-
 extern struct Layer   *LAYER_BACKGROUND;
 extern struct Layer   *LAYER_CRUSOR;
 extern unsigned char  *LAYER_BUFF_BACKGROUND;
 extern unsigned char   LAYER_BUFF_CRUSOR[256];
-
 
 #include "memory.h"
 
 void init_crusor();
 void init_mouse_cursor(char *mouse, char back_color);
 void init_windows();
-struct Windows  *windows_init(struct MEMMAN *man, unsigned char *vram, int xsize, int ysize);
+struct Windows *windows_init(struct MEMMAN *man, unsigned char *vram, int xsize, int ysize);
 struct Layer *layer_alloc(struct Windows *windows);
 void          layer_setbuff(struct Layer *layer, unsigned char *buff, int weight, int height, int col_inv);
 void          layer_elevation(struct Windows *windows, struct Layer *layer, int level);
 void          windows_refresh(struct Windows *windows);
+void windows_refresh_partial(struct Windows *windows, int x0, int y0, int x1, int y1);
 void          layer_slide(struct Windows *windows, struct Layer *layer, int new_x, int new_y);
 void          layer_free(struct Windows *windows, struct Layer *layer);
 void          update_crusor_position(int det_x, int det_y);

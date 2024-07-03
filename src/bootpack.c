@@ -46,6 +46,26 @@ void HariMain(void) {
 	initiate();
 	windows_refresh(WINDOWS);
 	mem_debug();
+
+	int i;
+	Array x;
+	Array_init(int, &x);
+	Array_append(int, &x, 1);
+	Array_append(int, &x, 2);
+	Array_append(int, &x, 3);
+	Array_append(int, &x, 4);
+	Array_append(int, &x, 2);
+
+	for (i = 0; i < 5; i++) {
+		_fprintf(stdout, "%d ", i);
+	}
+	_fprintf(stdout, "\n");
+
+	for (i = 0; i < 5; i++) {
+		_fprintf(stdout, "%d ", Array_value(int, &x, i));
+	}
+
+
 	for (;;) {
 		{
 			// display_crusor();

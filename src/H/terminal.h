@@ -14,7 +14,7 @@ typedef struct TERMINAL {
 	int mouse_x, mouse_y;
 	int skip_line, skip_word;
     unsigned char *buff;
-	Window *window;
+	Layer *window;
 } TERMINAL;
 
 extern struct TERMINAL *main_terminal;

@@ -178,7 +178,9 @@ void layer_elevation(struct Windows *windows, struct Layer *layer, int level) {
             windows->ordered_layers[level] = layer;
         }
     }
-    windows_refresh(windows);
+    // windows_refresh(windows);
+//! May be Wrong
+    windows_refresh_partial(windows, layer->x, layer->y, layer->x + layer->width, layer->y + layer->height);
     return ;
 }
 
@@ -266,28 +268,13 @@ void update_crusor_position(int det_x, int det_y) {
     return ;
 }
 
-// Should Check for boundary
+//TODO Should Check for boundary
 struct Layer *new_layer(int x0, int y0, unsigned char *buff, int width, int height) {
     int new_layer_level = LAYER_CRUSOR->level;
     struct Layer *ret = layer_alloc(WINDOWS);
     layer_setbuff(ret, buff, width, height, 99);
     layer_slide(WINDOWS, ret, x0, y0);
     layer_elevation(WINDOWS, ret, new_layer_level);
-    // refresh
-    ///
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
-    //
+//TODO add refresh
     return ret;
 }
