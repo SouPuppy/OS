@@ -10,12 +10,7 @@ typedef struct Widget {
 
 typedef struct Frame {
     int x0, y0, x1, y1;
-
-
-    int     capacity;
-    int     count;
-    Value*  values;
-
+    Array   values;
 } Frame;
 
 #endif
