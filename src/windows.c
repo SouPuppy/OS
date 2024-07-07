@@ -215,19 +215,18 @@ void windows_refresh_partial(struct Windows *windows, int x0, int y0, int x1, in
     for (i = 0; i <= windows->top; i++) {
         layer = windows->ordered_layers[i];
         buff  = layer->buff;
+        // x_min = max(x0, layer->x);
+        // x_max = min(x1, layer->x + layer->width);
+        // y_min = max(y0, layer->y);
+        // y_max = min(y1, layer->y + layer->height);
+
         x_min = max(x0, layer->x);
         x_max = min(x1, layer->x + layer->width);
         y_min = max(y0, layer->y);
         y_max = min(y1, layer->y + layer->height);
 
-        // _fprintf("[%d, %d] [%d, %d]   [%d, %d] [%d, %d]   |   [%d, %d] [%d, %d]\n", 
-        // &x0, &y0, &x1, &y1, 
-        // &layer->x, &layer->y, &layer->x + layer->width, &layer->y + layer->height,
-        // &x_min, &y_min, &x_max, &y_max
-        // );
-
-        for (iy = y_min, by = y_min - layer->y; iy < y_max; by++, iy++) {
-            for (ix = x_min, bx = x_min - layer->x; ix < x_max; bx++, ix++) {
+        for (iy = max(y_min, 0), by = y_min - layer->y; iy < min(y_max, boot_info->scrny); by++, iy++) {
+            for (ix = max(x_min, 0), bx = x_min - layer->x; ix < min(x_max, boot_info->scrnx); bx++, ix++) {
                 data = buff[by * layer->width + bx];
                 if (data != layer->col_inv) {
                     vram[iy * windows->width + ix] = data;
@@ -262,14 +261,15 @@ void update_crusor_position(int det_x, int det_y) {
     crusor_y += det_y;
     if (crusor_x <= 0) crusor_x = 0;
     if (crusor_y <= 0) crusor_y = 0;
-    if (crusor_x> boot_info->scrnx - 16 ) crusor_x = boot_info->scrnx - 16;
-    if (crusor_y> boot_info->scrny - 16 ) crusor_y = boot_info->scrny - 16;
+    if (crusor_x> boot_info->scrnx - 1 ) crusor_x = boot_info->scrnx - 1;
+    if (crusor_y> boot_info->scrny - 1 ) crusor_y = boot_info->scrny - 1;
     layer_slide(WINDOWS, LAYER_CRUSOR, crusor_x, crusor_y);
     return ;
 }
 
 //TODO Should Check for boundary
 struct Layer *new_layer(int x0, int y0, unsigned char *buff, int width, int height) {
+    _fprintf(stdout, "Crusor level %d\n", LAYER_CRUSOR->level);
     int new_layer_level = LAYER_CRUSOR->level;
     struct Layer *ret = layer_alloc(WINDOWS);
     layer_setbuff(ret, buff, width, height, 99);
@@ -278,3 +278,4 @@ struct Layer *new_layer(int x0, int y0, unsigned char *buff, int width, int heig
 //TODO add refresh
     return ret;
 }
+

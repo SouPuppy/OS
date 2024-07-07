@@ -17,9 +17,10 @@ typedef struct TERMINAL {
 	Layer *window;
 } TERMINAL;
 
-extern struct TERMINAL *main_terminal;
+extern struct TERMINAL *terminal_stdout;
+extern struct TERMINAL *terminal_stderr;
 
-void init_main_terminal();
+void init_terminals();
 void init_terminal(struct TERMINAL *terminal,
 					unsigned char _bg_color, unsigned char _font_color,
 					int x0	  , int y0	  ,

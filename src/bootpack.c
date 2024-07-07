@@ -5,11 +5,13 @@
 #include "./H/dsctbl.h"
 #include "./H/pic.h"
 #include "./H/terminal.h"
+// !   MOUSE & KB doesn't support higher version
 #include "./H/device.h"
 
 #include "./H/io.h"
 #include "./H/memory.h"
 #include "H/display.h"
+#include "H/frame.h"
 #include "H/windows.h"
 
 
@@ -25,7 +27,7 @@ void initiate(void) {
 	init_io();
 
 	init_windows();				// windows.h
-	init_main_terminal();
+	init_terminals();
 
 
 	init_keyboard_buf();		// pic.h
@@ -39,46 +41,42 @@ void initiate(void) {
 
 	init_mouse();
 	
-	_fprintf(stdout, "Initiated\n\tHello world!\n");
+	_fprintf(stderr, "Initiated\n\n");
 }
 
 void HariMain(void) {
 	initiate();
 	windows_refresh(WINDOWS);
+	_fprintf(stdout, "%d x %d\n", boot_info->scrnx, boot_info->scrny);
 	mem_debug();
 
-	int i;
-	Array x;
-	Array_init(int, &x);
-	Array_append(int, &x, 1);
-	Array_append(int, &x, 2);
-	Array_append(int, &x, 3);
-	Array_append(int, &x, 4);
-	Array_append(int, &x, 2);
+	Frame *Hi;
+	init_Frame(Hi, 50, 50, 300, 200);
+	ADD_WIDGET_TEXTBOX(Hi, 25, 10, 200, 30);
+	ADD_WIDGET_TEXTBOX(Hi, 25, 50, 200, 30);
+	ADD_WIDGET_TEXTBOX(Hi, 25, 90, 200, 30);
 
-	for (i = 0; i < 5; i++) {
-		_fprintf(stdout, "%d ", i);
-	}
-	_fprintf(stdout, "\n");
+	Frame *Hi2;
+	init_Frame(Hi2, 400, 50, 300, 200);
+	ADD_WIDGET_TEXTBOX(Hi2, 25, 10, 200, 30);
+	ADD_WIDGET_TEXTBOX(Hi2, 25, 50, 200, 30);
+	ADD_WIDGET_TEXTBOX(Hi2, 25, 90, 200, 30);
 
-	for (i = 0; i < 5; i++) {
-		_fprintf(stdout, "%d ", Array_value(int, &x, i));
-	}
-
+	
+	frame_dubug(Hi);
 
 	for (;;) {
 		{
-			// display_crusor();
+			
 		}
 
 		io_cli();
 		if (detect_mouse(ms_det) == 3) {
-			// _fprintf(stdout, "MOUSE [%d\t%d]\t%c\n", ms_det->x, ms_det->y, "_LR C"[ms_det->btn]);
+			_fprintf(stdout, "MOUSE [%d\t%d]\t%c\n", ms_det->x, ms_det->y, "_LR C"[ms_det->btn]);
 			update_crusor_position(ms_det->x, ms_det->y);
 		}
 		else if (detect_keyboard(kb_det) == 1) {
-			
-			// _fprintf(stdout, "KEYBOARD %d\n", kb_det->data);
+			_fprintf(stdout, "KEYBOARD %d\n", kb_det->data);
 		}
 		else {
 			io_stihlt();

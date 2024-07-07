@@ -23,7 +23,7 @@
 #define withered_tea    14
 #define black           15
 
-void box(char *vram, unsigned char color, int frame_width, int x0, int y0, int x1, int y1);
+void box(char *vram, unsigned char color, int frame_width, int x0, int y0, int xsize, int ysize);
 void print_char(char *vram, unsigned char color, int fram_width, int x, int y, char c);
 void block_of_color(char *vram, int vxsize, int vysize, int block_x, int block_y, int x0, int y0, char *buff);
 

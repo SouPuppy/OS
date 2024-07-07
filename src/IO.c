@@ -24,10 +24,15 @@ int line_spacing = 2;
 int word_spacing = 1;
 
 int _write(FILE *stream, char c) {
-    if (stream->_file == 1) { // stdout
-        print(main_terminal, c);
+    if (stream == stdout) { // stdout
+        print(terminal_stdout, c);
         return 1;
     }
+    else if (stream == stderr) { // stdout
+        print(terminal_stderr, c);
+        return 1;
+    }
+
     return -1;
 }
 
@@ -125,9 +130,9 @@ int _fprintf(FILE *stream, const char *format, ...) {
         }
         p++;
     }
-    if (stream == stdout) {
-        windows_refresh(WINDOWS);
-    }
+    // if (stream == stdout) {
+    //     windows_refresh(WINDOWS);
+    // }
     return count;
     return 1;
 }

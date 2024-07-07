@@ -5,11 +5,11 @@
 extern struct BOOTINFO *boot_info;
 extern char EZ_font[4096];
 
-void box(char *vram, unsigned char color, int frame_width, int x0, int y0, int x1, int y1) {
-    int x, y;
-    for(x = x0; x <= x1; x++) {
-        for(y = y0; y <= y1; y++) {
-            BYTE(vram)[y * frame_width + x] = color;
+void box(char *vram, unsigned char color, int frame_width, int x0, int y0, int xsize, int ysize) {
+    int x, y, ix, iy;
+    for(iy = 0, y = y0; iy < ysize; iy++, y++) {
+        for(ix = 0, x = x0; ix < xsize; ix++, x++) {
+            vram[y * frame_width + x] = color;
         }
     }
     return ;

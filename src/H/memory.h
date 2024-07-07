@@ -38,11 +38,12 @@ void *malloc(unsigned int size);
 void *realloc(void *old_ptr, unsigned int size);
 int   free(void *ptr);
 
+//* Mem op
+void *memcpy(void *dest, const void *src, size_t n);
+void *memset(void *dest, int val, size_t n);
 
 //* Dynamic Array
-
 void* reallocate(void* pointer, size_t oldSize, size_t newSize);
-
 
 typedef struct Array {
     int     capacity;
@@ -76,7 +77,10 @@ typedef struct Array {
 
 
 #define Array_value(type, a, i) (*((type*)((a)->values) + (i)))
-// (*(type*)(((char*)a->values) + element_size_with_padding * i))
+// #define Array_value(type, a, i) (((type*)((a)->values) + (i)))
+// #define Array_value(type, a, i) (((type*)(a)->values)[i])
+
+#define Array_size(a) ((unsigned int)((a)->count))
 
 //TODO add element_size_with_padding
 

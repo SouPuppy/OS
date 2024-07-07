@@ -140,14 +140,14 @@ int memman_free_4k  (struct MEMMAN *man, unsigned int addr, unsigned int size) {
 #include "./H/io.h"
 
 void mem_debug() {
-    _fprintf(stdout, "Total memory %d MB | Free memory  %d KB\n",
-     memtest(0x00400000, 0xffffffff) / (1024 * 1024),
-     memman_total(mem_man) / (1024));
+    // _fprintf(stdout, "Total memory %d MB | Free memory  %d KB\n",
+    //  memtest(0x00400000, 0xffffffff) / (1024 * 1024),
+    //  memman_total(mem_man) / (1024));
 
     
-    // _fprintf(stdout, "Total memory %d B | Free memory  %d B\n",
-    //  memtest(0x00400000, 0xffffffff),
-    //  memman_total(mem_man));
+    _fprintf(stdout, "memory %d/%d B\n",
+     memman_total(mem_man),
+     memtest(0x00400000, 0xffffffff));
 }
 
 // APP FUNC
@@ -206,7 +206,6 @@ int free(void *ptr) {
     return memman_free(mem_man, mem_addr, size);
 }
 
-
 void *realloc(void *old_ptr, unsigned int size) {
     if (size == 0) {
         free(old_ptr);
@@ -226,8 +225,6 @@ void *realloc(void *old_ptr, unsigned int size) {
 
     return new_ptr;
 }
-
-
 
 //* Self Adapting Container
 
